@@ -6,10 +6,18 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddRazorPages();
 
-builder.Services.AddDbContext<BookDbContext>(options =>
-    options.UseSqlite(builder.Configuration.GetConnectionString("BlogContext")));
+builder.Services.AddDbContext<BookContext>(options =>
+    options.UseSqlite(builder.Configuration.GetConnectionString("BookContext")));
 
 var app = builder.Build();
+
+//Calling SeedData
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+
+    SeedData.Initialize(services);
+}
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

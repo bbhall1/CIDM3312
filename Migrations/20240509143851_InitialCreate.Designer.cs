@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace CIDM3312.Migrations
 {
-    [DbContext(typeof(BookDbContext))]
-    [Migration("20240503021645_InitialCreate")]
+    [DbContext(typeof(BookContext))]
+    [Migration("20240509143851_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -20,29 +20,20 @@ namespace CIDM3312.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.4");
 
-            modelBuilder.Entity("BookShelf", b =>
-                {
-                    b.Property<int>("BooksBookID")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("ShelvesShelfID")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("BooksBookID", "ShelvesShelfID");
-
-                    b.HasIndex("ShelvesShelfID");
-
-                    b.ToTable("BookShelf");
-                });
-
             modelBuilder.Entity("CIDM3312.Book", b =>
                 {
                     b.Property<int>("BookID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("Author")
+                        .IsRequired()
+                        .HasMaxLength(60)
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Genre")
                         .IsRequired()
+                        .HasMaxLength(20)
                         .HasColumnType("TEXT");
 
                     b.Property<DateOnly>("PublicationYear")
@@ -50,6 +41,7 @@ namespace CIDM3312.Migrations
 
                     b.Property<string>("Title")
                         .IsRequired()
+                        .HasMaxLength(60)
                         .HasColumnType("TEXT");
 
                     b.HasKey("BookID");
@@ -82,32 +74,20 @@ namespace CIDM3312.Migrations
 
             modelBuilder.Entity("CIDM3312.Shelf", b =>
                 {
+                    b.Property<int>("BookID")
+                        .HasColumnType("INTEGER");
+
                     b.Property<int>("ShelfID")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("ShelfName")
                         .IsRequired()
+                        .HasMaxLength(60)
                         .HasColumnType("TEXT");
 
-                    b.HasKey("ShelfID");
+                    b.HasKey("BookID", "ShelfID");
 
                     b.ToTable("Shelves");
-                });
-
-            modelBuilder.Entity("BookShelf", b =>
-                {
-                    b.HasOne("CIDM3312.Book", null)
-                        .WithMany()
-                        .HasForeignKey("BooksBookID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("CIDM3312.Shelf", null)
-                        .WithMany()
-                        .HasForeignKey("ShelvesShelfID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("CIDM3312.Review", b =>
@@ -121,9 +101,20 @@ namespace CIDM3312.Migrations
                     b.Navigation("Book");
                 });
 
+            modelBuilder.Entity("CIDM3312.Shelf", b =>
+                {
+                    b.HasOne("CIDM3312.Book", null)
+                        .WithMany("Shelves")
+                        .HasForeignKey("BookID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("CIDM3312.Book", b =>
                 {
                     b.Navigation("Reviews");
+
+                    b.Navigation("Shelves");
                 });
 #pragma warning restore 612, 618
         }
