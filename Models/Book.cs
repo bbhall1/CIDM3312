@@ -24,8 +24,8 @@ namespace CIDM3312
         [DataType(DataType.Date)]
         public  DateOnly PublicationYear {get;set;}
 
-        public List<Review> Reviews {get;set;} = new List<Review>();
-        public List<Shelf> Shelves {get;set;} = new List<Shelf>();
+        public List<Review> Reviews {get;set;} = new List<Review>(); //book can have many reviews
+        //public List<Shelf> Shelves {get;set;} = new List<Shelf>();
                
     }
 }

@@ -2,10 +2,10 @@
 @model CIDM3312.Pages.Books.Book_IndexModel
 
 @{
-    ViewData["Title"] = "/Book_Index";
+    ViewData["Title"] = "Book_Index";
 }
 
-<h1>Books Index</h1>
+<h1>Book Index</h1>
 
 <p>
     <a asp-page="Create">Create New</a>
@@ -13,20 +13,17 @@
 <table class="table">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Title)
+            <th>    
+                @Html.DisplayNameFor(model => model.Book[0].Title)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Author)
+                @Html.DisplayNameFor(model => model.Book[0].Author)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Genre)
+                @Html.DisplayNameFor(model => model.Book[0].Genre)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Book.PublicationYear)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Reviews)
+                @Html.DisplayNameFor(model => model.Book[0].PublicationYear)
             </th>
             <th></th>
         </tr>
@@ -46,16 +43,7 @@
             <td>
                 @Html.DisplayFor(modelItem => item.PublicationYear)
             </td>
-            <td>
-                @if (item.AverageRating.HasValue)
-                {
-                    @item.AverageRating.Value.ToString("F1")
-                }
-                else
-                {
-                @Html.DisplayFor(modelItem => item.AverageRating)
-                }
-            </td>
+            
             <td>
                 <a asp-page="./Edit" asp-route-id="@item.BookID">Edit</a> |
                 <a asp-page="./Details" asp-route-id="@item.BookID">Details</a> |
@@ -65,3 +53,18 @@
 }
     </tbody>
 </table>
+<hr />
+@{
+    
+    var prevDisabled = "";
+    if (Model.PageNum <= 1)
+    {
+        prevDisabled = "disabled";
+    }
+}
+<nav aria-label="Page navigation example">
+    <ul class="pagination">
+        <li class="page-item @prevDisabled"><a class="page-link" asp-page="./Book_Index" asp-route-PageNum="@(Model.PageNum - 1)">Previous</a></li>
+        <li class="page-item"><a class="page-link" asp-page="./Book_Index" asp-route-PageNum="@(Model.PageNum + 1)">Next</a></li>
+    </ul>
+</nav>
